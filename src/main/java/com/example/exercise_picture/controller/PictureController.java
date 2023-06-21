@@ -1,7 +1,9 @@
 package com.example.exercise_picture.controller;
 
+import com.example.exercise_picture.model.Category;
 import com.example.exercise_picture.model.Picture;
 import com.example.exercise_picture.repository.IPictureRepo;
+import com.example.exercise_picture.service.category.ICategoryService;
 import com.example.exercise_picture.service.picture.IPictureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ public class PictureController {
     private IPictureService pictureService;
     @Autowired
     private IPictureRepo iPictureRepo;
+    @Autowired
+    private ICategoryService iCategoryService;
 
     @PostMapping
     public ResponseEntity<Picture> createPicture(@RequestBody Picture picture) {
@@ -67,4 +71,18 @@ public class PictureController {
         return iPictureRepo.findByNameContainingIgnoreCase(name);
     }
 
+    @GetMapping("searchcategory/{categoryId}")
+    public ResponseEntity<Iterable<Picture>> findByCategory(@PathVariable Long categoryId) {
+
+        Category category = iCategoryService.findById(categoryId).orElse(null);
+        if (category != null) {
+            Iterable<Picture> iterable = pictureService.findByCategory(category);
+            if (iterable != null) {
+                return new ResponseEntity<>(iterable, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

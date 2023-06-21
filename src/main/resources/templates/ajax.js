@@ -311,7 +311,7 @@ function showFormSearchCategory() {
     let form = "";
     form += `
 <span>Search by category</span><br>
-<select id = "id"></select>
+<select id = "search_category"></select>
 <button onclick="searchByCategory()">Search</button>`;
 $.ajax({
     type: "GET",
@@ -322,7 +322,7 @@ $.ajax({
         for (let i = 0; i < data.length; i++) {
             categories += `<option value="${data[i].id}">${data[i].name_category}</option>`;
         }
-        document.getElementById("id").innerHTML = categories;
+        document.getElementById("search_category").innerHTML = categories;
     }
 })
     document.getElementById("display").innerHTML = form;
@@ -375,5 +375,48 @@ function searchByName() {
 }
 
 function searchByCategory(){
-
+    let searchCategory = document.getElementById("search_category").value;
+    $.ajax({
+        type:"GET",
+        url:"http://localhost:8888/pictures/searchcategory/" + searchCategory,
+        success: function (data) {
+            console.log(data);
+            let category = "";
+            category += `
+            <table border="1">
+            <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Height</th>
+                    <th>Width</th>
+                    <th>Material</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Categories</th>
+                    <th>Operation</th>
+                    </tr>`;
+            for (let i = 0; i < data.length; i++) {
+                category += `<tr>
+                    <td>${data[i].id}</td>
+                    <td>${data[i].name}</td>
+                    <td>${data[i].height}</td>
+                    <td>${data[i].width}</td>
+                    <td>${data[i].material}</td>
+                    <td>${data[i].description}</td>
+                    <td>${data[i].price}</td>
+                    <td>`;
+                for (let j = 0; j < data[i].categories.length; j++) {
+                    category += `${data[i].categories[j].name_category}`;
+                    if (j < data[i].categories.length - 1) {
+                        category += ",";
+                    }
+                }
+                category += `</td>
+                   <td><button onclick="viewPicture(${data[i].id})">View</button>||<button onclick="updatePicture(${data[i].id})">Update</button>||<button onclick="deletePicture (${data[i].id})">Delete</button></td>
+                </tr>`;
+            }
+            category += `</table>`;
+            document.getElementById("display").innerHTML = category;
+        }
+    })
 }

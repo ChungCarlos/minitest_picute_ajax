@@ -32,13 +32,8 @@ public class PictureService implements IPictureService {
         pictureRepo.deleteById(id);
     }
 
-//    @Override
-//    public List<Picture> findByCategory(Category category) {
-//        return pictureRepo.findByCategory(category);
-//    }
-//
-//    @Override
-//    public List<Picture> findPictureByName(String name) {
-//        return pictureRepo.findPictureByName(name);
-//    }
+    @Override
+    public List<Picture> findByCategory(Category category) {
+        return pictureRepo.findAllByCategories(category);
+    }
 }

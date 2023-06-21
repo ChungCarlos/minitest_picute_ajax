@@ -17,8 +17,6 @@ public interface IPictureService extends IGeneralService<Picture> {
     Picture save(Picture picture);
 
     void remove(Long id);
-//    List<Picture> findByCategory(Category category);
-//
-//    List<Picture> findPictureByName(String name);
+    List<Picture> findByCategory(Category category);
 
 }
